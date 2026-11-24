@@ -36,4 +36,14 @@ typedef struct s_list
 	t_env			*env;
 } t_list;
 
+// Enviroment Variables
+
+void	start_env(t_env **env_table, char **envp);
+t_env	*create_newenv(void *name, void *value);
+t_env	*find_envtail(t_env *env_table);
+void	addenv_back(t_env **head, t_env *newenv);
+void	print_env(t_env *env_table);
+
+void	free_env(t_env *env_table);
+
 #endif
