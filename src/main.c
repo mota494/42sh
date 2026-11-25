@@ -13,7 +13,7 @@ char	*get_til(t_env *env_table)
 	tmp = env_table;
 	if (tmp){
 		while (tmp){
-			if (strncmp(tmp->env_name, "HOME", sizeof("HOME")) == 0){
+			if (strncmp(tmp->env_name, "HOME", strlen("HOME")) == 0){
 				toret = strdup(tmp->env_value);
 				return toret;
 			}
@@ -40,10 +40,23 @@ char	*get_til(t_env *env_table)
 	return (toret);
 }
 
-// void	builtin_cd(char *path)
-// {
-// 	
-// }
+
+
+
+
+void	builtin_cd(const char *path, t_env **env_table)
+{
+	int status;
+	status = chdir(path);
+	if (status == -1){
+		errno = status;
+		return ;
+	}
+	char buf[PATH_MAX];
+	getcwd(buf, sizeof(buf));
+	
+	update_env_table(env_table, "PWD", buf);
+}
 
 void	initialize(t_list *list)
 {
@@ -52,20 +65,26 @@ void	initialize(t_list *list)
 
 int main(int ac, char **av, char **envp)
 {
-	(void) av;
+	(void) ac;
 	t_list	list;
 
-	if (ac != 1)
-	{
-		fprintf(stderr, "42sh doesn't take arguments\n");
-		return (1);
-	}
+	// if (ac != 1)
+	// {
+	// 	fprintf(stderr, "42sh doesn't take arguments\n");
+	// 	return (1);
+	// }
 	initialize(&list);
 	start_env(&list.env, envp);
-	// print_env(list.env);
 	char *home_dir;
 	home_dir = get_til(list.env);
-	printf("%s\n", home_dir);
+
+	builtin_cd(av[1], &list.env);
+	
+	char buf[PATH_MAX];
+	getcwd(buf, sizeof(buf));
+	printf("%s\n", buf);
+
+	print_env(list.env);
 	free_env(list.env);
 	free(home_dir);
 	return (0);

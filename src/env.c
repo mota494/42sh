@@ -1,5 +1,20 @@
 #include "header.h"
 
+void	update_env_table(t_env **env_table, char *key, char *value)
+{
+	t_env *to_edit;
+
+	to_edit = *env_table;
+	
+	while (to_edit){
+		if (strncmp(to_edit->env_name, key, strlen(key)) == 0){
+			memcpy(to_edit->env_value, value, strlen(value));
+		}
+		to_edit = to_edit->next;
+	}
+}
+
+
 void	free_env(t_env *env_table)
 {
 	t_env *tmp;
