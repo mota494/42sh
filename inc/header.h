@@ -1,6 +1,7 @@
 #ifndef HEADER_H 
 # define HEADER_H
 
+# include <assert.h>
 # include <sys/stat.h>
 # include <stdio.h>
 # include <readline/history.h>
@@ -25,5 +26,11 @@ typedef struct	s_env
 	char			*env_value;
 	struct s_env	*next;
 }	t_env;
+
+typedef struct	s_state
+{
+	t_list	*tokens;
+	t_env	*env_table;
+}	t_state;
 
 #endif

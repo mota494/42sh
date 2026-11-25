@@ -1,25 +1,49 @@
-#include "header.h"
+#include "../inc/header.h"
 
-void	initialize(t_list *tokens, char **envp)
+int exit_code;
+
+void	initialize(t_state *private, char **envp)
 {
-	int i = 0;
-	tokens = NULL;
-	while (envp[i])
+	(void) envp;
+
+	private->env_table = NULL;
+	private->tokens = NULL;
+	srand(time(NULL));
+}
+
+void	to_history(char *line)
+{
+	FILE	*hist_file;
+
+	hist_file = fopen(".42sh_hist", "w+");
+	fprintf(hist_file, "%s", line);
+}
+
+void	main_loop(t_state *private)
+{
+	char	*line;
+
+	while (1)
 	{
-		printf("%s\n", envp[i]);
-		i++;
+		line = readline("42sh> ");
+		if (line && strlen(line) > 0)
+		{
+			to_history(line);
+		}
 	}
 }
 
 int main(int ac, char **av, char **envp)
 {
 	(void) av;
-	t_list	*tokens;
+	t_state	private;
 
 	if (ac != 1)
 	{
 		fprintf(stderr, "42sh doesn't take arguments\n");
 		return (1);
 	}
-	initialize(tokens, envp);
+	initialize(&private, envp);
+	main_loop(&private);
+	return (exit_code);
 }
