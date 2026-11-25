@@ -15,8 +15,24 @@
 # include <stdbool.h>
 # include <limits.h>
 
+typedef enum e_types
+{
+	string,
+	pipes, // |
+	command,
+	builtin,
+	control, // ; && ||
+	redirect, // < > << >> >& <& can be precedeed by digits
+	file,
+	folder,
+	error,
+}	t_types;
+
 typedef struct s_list
 {
+	char			*content;
+	t_types			type;
+	int				pos;
 	struct s_list	*next;
 } t_list;
 
